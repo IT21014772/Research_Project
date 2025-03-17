@@ -30,7 +30,7 @@ const FilteredCourses = () => {
       try {
         // Fetch user profile to get email
         const profileResponse = await axios.get(
-          "https://edu-platform-ten.vercel.app/api/auth/profile",
+          "https://research-project-theta.vercel.app/api/auth/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -39,7 +39,7 @@ const FilteredCourses = () => {
 
         // Fetch content preference (subject) using email
         const contentPreferenceResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/content?email=${email}`
+          `https://research-project-theta.vercel.app/api/content?email=${email}`
         );
         const subjectName = contentPreferenceResponse.data.preferences;
         console.log(contentPreferenceResponse.data.preferences);
@@ -47,7 +47,7 @@ const FilteredCourses = () => {
 
         // Fetch courses by subject using the backend endpoint
         const coursesResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/course/filter/${subjectName}`
+          `https://research-project-theta.vercel.app/api/course/filter/${subjectName}`
         );
         setCourses(coursesResponse.data);
       } catch (error) {

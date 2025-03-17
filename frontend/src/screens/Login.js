@@ -25,7 +25,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("https://edu-platform-ten.vercel.app/api/auth/login", { email, password });
+      const res = await axios.post("https://research-project-theta.vercel.app/api/auth/login", { email, password });
       localStorage.setItem("token", res.data.token); // Store token in local storage
 
       // Check if the logged-in user is an admin

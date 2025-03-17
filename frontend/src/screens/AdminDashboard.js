@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("https://edu-platform-ten.vercel.app/api/auth/users");
+        const response = await axios.get("https://research-project-theta.vercel.app/api/auth/users");
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -33,7 +33,7 @@ const AdminDashboard = () => {
   // Handle user deletion
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`https://edu-platform-ten.vercel.app/api/auth/users/${userId}`);
+      await axios.delete(`https://research-project-theta.vercel.app/api/auth/users/${userId}`);
       setUsers(users.filter((user) => user._id !== userId)); // Remove the user from the list
       alert("User deleted successfully!");
     } catch (error) {

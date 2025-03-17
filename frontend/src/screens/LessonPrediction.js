@@ -47,7 +47,7 @@ const PredictionForm = () => {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://edu-platform-ten.vercel.app/api/auth/profile", {
+      const res = await axios.get("https://research-project-theta.vercel.app/api/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserEmail(res.data.email);
@@ -105,7 +105,7 @@ const PredictionForm = () => {
 
         // Step 2: Save prediction results to backend
         if (userEmail) {
-          await axios.post("https://edu-platform-ten.vercel.app/api/lesson/save", {
+          await axios.post("https://research-project-theta.vercel.app/api/lesson/save", {
             email: userEmail,
             preferences: data["Top 5 Predicted Lessons"],
           });

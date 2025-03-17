@@ -72,7 +72,7 @@ const Profile = () => {
 
       try {
         const profileResponse = await axios.get(
-          "https://edu-platform-ten.vercel.app/api/auth/profile",
+          "https://research-project-theta.vercel.app/api/auth/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -91,17 +91,17 @@ const Profile = () => {
         const email = profileResponse.data.email;
 
         const contentPreferenceResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/content?email=${email}`
+          `https://research-project-theta.vercel.app/api/content?email=${email}`
         );
         setContentPreference(contentPreferenceResponse.data);
 
         const lessonPreferenceResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/lesson?email=${email}`
+          `https://research-project-theta.vercel.app/api/lesson?email=${email}`
         );
         setLessonPreference(lessonPreferenceResponse.data);
 
         const peerPreferenceResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/peer?email=${email}`
+          `https://research-project-theta.vercel.app/api/peer?email=${email}`
         );
         setPeerPreference(peerPreferenceResponse.data);
 
@@ -130,7 +130,7 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.put(
-        "https://edu-platform-ten.vercel.app/api/auth/updateProfile",
+        "https://research-project-theta.vercel.app/api/auth/updateProfile",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -156,7 +156,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const profileResponse = await axios.get(
-        "https://edu-platform-ten.vercel.app/api/auth/profile",
+        "https://research-project-theta.vercel.app/api/auth/profile",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -190,7 +190,7 @@ const Profile = () => {
       setPrediction(predictedLesson);
 
       if (user?.email) {
-        await axios.post("https://edu-platform-ten.vercel.app/api/content/save", {
+        await axios.post("https://research-project-theta.vercel.app/api/content/save", {
           email: user.email,
           preferences: predictedLesson,
           stressLevel: selectedStressLevel,
@@ -249,7 +249,7 @@ const Profile = () => {
       setPeerPrediction(predictedClass);
 
       if (profileData.email) {
-        await axios.post("https://edu-platform-ten.vercel.app/api/peer/save", {
+        await axios.post("https://research-project-theta.vercel.app/api/peer/save", {
           email: profileData.email,
           preferences: predictedClass,
         });

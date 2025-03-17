@@ -51,7 +51,7 @@ const AddCoursePage = () => {
       };
 
       // Send the request
-      const response = await axios.post('https://edu-platform-ten.vercel.app/api/course/add', payload);
+      const response = await axios.post('https://research-project-theta.vercel.app/api/course/add', payload);
       console.log('Course content added successfully:', response.data);
       alert('Course content added successfully!');
 

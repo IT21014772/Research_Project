@@ -40,7 +40,7 @@ function LessonPrediction() {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://edu-platform-ten.vercel.app/api/auth/profile", {
+      const res = await axios.get("https://research-project-theta.vercel.app/api/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserEmail(res.data.email);
@@ -134,7 +134,7 @@ function LessonPrediction() {
 
       // Send prediction and user data to the backend API
       if (userEmail) {
-        await axios.post("https://edu-platform-ten.vercel.app/api/content/save", {
+        await axios.post("https://research-project-theta.vercel.app/api/content/save", {
           email: userEmail,
           preferences: predictedLesson,
           stressLevel: formData.stress_level,

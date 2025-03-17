@@ -24,14 +24,14 @@ const Home = () => {
       try {
         // Fetch courses
         const coursesResponse = await axios.get(
-          "https://edu-platform-ten.vercel.app/api/course"
+          "https://research-project-theta.vercel.app/api/course"
         );
         setCourses(coursesResponse.data);
         console.log("Courses fetched:", coursesResponse.data);
 
         // Fetch specializations
         const specializationsResponse = await axios.get(
-          "https://edu-platform-ten.vercel.app/api/specialize"
+          "https://research-project-theta.vercel.app/api/specialize"
         );
         setSpecializations(specializationsResponse.data);
         console.log("Specializations fetched:", specializationsResponse.data);
@@ -56,7 +56,7 @@ const Home = () => {
       try {
         // Fetch user profile to verify authentication
         const profileResponse = await axios.get(
-          "https://edu-platform-ten.vercel.app/api/auth/profile",
+          "https://research-project-theta.vercel.app/api/auth/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -33,14 +33,14 @@ const CourseDetailsPage = () => {
       try {
         // Fetch course details
         const courseResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/course/${id}`
+          `https://research-project-theta.vercel.app/api/course/${id}`
         );
         setCourse(courseResponse.data);
         console.log(courseResponse.data.subject);
 
         // Fetch reviews for the course
         const reviewsResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/reviews/${id}`
+          `https://research-project-theta.vercel.app/api/reviews/${id}`
         );
         setReviews(reviewsResponse.data);
       } catch (error) {
@@ -92,7 +92,7 @@ const CourseDetailsPage = () => {
 
       // Update user profile with quiz marks
       const updateResponse = await axios.put(
-        "https://edu-platform-ten.vercel.app/api/auth/updateProfile",
+        "https://research-project-theta.vercel.app/api/auth/updateProfile",
         {
           [getMarksField(course.subject)]: score, // Update the corresponding marks field
         },
@@ -141,7 +141,7 @@ const CourseDetailsPage = () => {
 
       // Submit the review
       await axios.post(
-        `https://edu-platform-ten.vercel.app/api/reviews`,
+        `https://research-project-theta.vercel.app/api/reviews`,
         {
           courseId: id,
           rating,

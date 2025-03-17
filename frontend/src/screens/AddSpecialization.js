@@ -23,7 +23,7 @@ const AddSpecialization = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://edu-platform-ten.vercel.app/api/course');
+        const response = await axios.get('https://research-project-theta.vercel.app/api/course');
         setCourses(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -63,7 +63,7 @@ const AddSpecialization = () => {
       };
 
       // Send the request
-      await axios.post('https://edu-platform-ten.vercel.app/api/specialize/add', payload);
+      await axios.post('https://research-project-theta.vercel.app/api/specialize/add', payload);
       alert('Specialization added successfully!');
 
       // Reset the form

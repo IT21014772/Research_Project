@@ -22,7 +22,7 @@ const SpecializationDetailPage = () => {
     const fetchSpecialization = async () => {
       try {
         const response = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/specialize/${specializationId}`
+          `https://research-project-theta.vercel.app/api/specialize/${specializationId}`
         );
         setSpecialization(response.data);
       } catch (error) {

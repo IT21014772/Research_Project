@@ -22,7 +22,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      await axios.post("https://edu-platform-ten.vercel.app/api/auth/register", { name, email, password });
+      await axios.post("https://research-project-theta.vercel.app/api/auth/register", { name, email, password });
       alert("Signup Successful! Please Login");
       navigate("/login");
     } catch (err) {

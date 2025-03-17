@@ -52,7 +52,7 @@ function PeerPrediction() {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://edu-platform-ten.vercel.app/api/auth/profile", {
+      const res = await axios.get("https://research-project-theta.vercel.app/api/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserEmail(res.data.email);
@@ -148,7 +148,7 @@ function PeerPrediction() {
 
       // Save the prediction to the backend
       if (userEmail) {
-        await axios.post("https://edu-platform-ten.vercel.app/api/peer/save", {
+        await axios.post("https://research-project-theta.vercel.app/api/peer/save", {
           email: userEmail,
           preferences: response.data["Predicted Class"],
         });
