@@ -507,33 +507,8 @@ const Profile = () => {
         {/* Right Side: Charts and Preferences */}
         <Grid item xs={12} md={6}>
           {/* Content Preference */}
-          {lessonPredictions.length > 0 && (
-            <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
-              <Typography variant="h5" gutterBottom>
-                Latest Lesson Predictions (Top 5)
-              </Typography>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Rank</TableCell>
-                      <TableCell>Lesson</TableCell>
-                      <TableCell>Probability</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {lessonPredictions.map((prediction, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{prediction.lesson}</TableCell>
-                        <TableCell>{Math.round(prediction.probability * 100)}%</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
-          )}
+
+  
           {contentPreference && (
             <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
               <Typography variant="h5" gutterBottom>
