@@ -60,13 +60,13 @@ const FilteredCourses = () => {
 
       try {
         const profileResponse = await axios.get(
-          "https://edu-platform-ten.vercel.app/api/auth/profile",
+          "https://research-project-theta.vercel.app/api/auth/profile",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const email = profileResponse.data.email;
 
         const contentPreferenceResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/content?email=${email}`
+          `https://research-project-theta.vercel.app/api/content?email=${email}`
         );
         
         const subjectName = contentPreferenceResponse.data.preferences;
@@ -76,7 +76,7 @@ const FilteredCourses = () => {
         setCognitivePerformance(cognitive);
 
         const coursesResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/course/filter/${encodeURIComponent(subjectName)}`
+          `https://research-project-theta.vercel.app/api/course/filter/${encodeURIComponent(subjectName)}`
         );
         
         setCourses(coursesResponse.data);
