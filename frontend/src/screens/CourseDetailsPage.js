@@ -36,14 +36,14 @@ const CourseDetailsPage = () => {
       try {
         // Fetch course details
         const courseResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/course/${id}`
+          `https://research-project-rd9w.vercel.app/api/course/${id}`
         );
         setCourse(courseResponse.data);
         console.log(courseResponse.data.subject);
 
         // Fetch reviews for the course
         const reviewsResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/reviews/${id}`
+          `https://research-project-rd9w.vercel.app/api/reviews/${id}`
         );
         setReviews(reviewsResponse.data);
       } catch (error) {
@@ -103,7 +103,7 @@ const CourseDetailsPage = () => {
       }
   
       const response = await axios.put(
-        "https://edu-platform-ten.vercel.app/api/auth/updateProfile",
+        "https://research-project-rd9w.vercel.app/api/auth/updateProfile",
         updateData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -182,7 +182,7 @@ const CourseDetailsPage = () => {
 
       // Send update to backend
       const updateResponse = await axios.put(
-        "https://edu-platform-ten.vercel.app/api/auth/updateProfile",
+        "https://research-project-rd9w.vercel.app/api/auth/updateProfile",
         updateData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -227,7 +227,7 @@ const CourseDetailsPage = () => {
 
       // Submit the review
       await axios.post(
-        `https://edu-platform-ten.vercel.app/api/reviews`,
+        `https://research-project-rd9w.vercel.app/api/reviews`,
         {
           courseId: id,
           rating,
