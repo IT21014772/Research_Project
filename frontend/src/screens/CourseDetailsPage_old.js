@@ -26,9 +26,6 @@ const CourseDetailsPage = () => {
   const [quizScore, setQuizScore] = useState(0); // Store quiz score
   const [quizSubmitted, setQuizSubmitted] = useState(false); // Track quiz submission
   const navigate = useNavigate();
-  const [timeSpent, setTimeSpent] = useState(0); // Time in seconds
-  const [timerActive, setTimerActive] = useState(true);
-  const [hasUpdatedMarks, setHasUpdatedMarks] = useState(false); // Track if marks were updated
 
   // Fetch course details and reviews on component mount
   useEffect(() => {
@@ -36,14 +33,14 @@ const CourseDetailsPage = () => {
       try {
         // Fetch course details
         const courseResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/course/${id}`
+          `https://research-project-theta.vercel.app/api/course/${id}`
         );
         setCourse(courseResponse.data);
         console.log(courseResponse.data.subject);
 
         // Fetch reviews for the course
         const reviewsResponse = await axios.get(
-          `https://edu-platform-ten.vercel.app/api/reviews/${id}`
+          `https://research-project-theta.vercel.app/api/reviews/${id}`
         );
         setReviews(reviewsResponse.data);
       } catch (error) {
@@ -54,91 +51,11 @@ const CourseDetailsPage = () => {
     fetchCourse();
   }, [id]);
 
-  useEffect(() => {
-    let interval;
-    if (timerActive) {
-      interval = setInterval(() => {
-        setTimeSpent((prevTime) => prevTime + 1);
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [timerActive]);
-
-  // Stop timer when navigating away
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (timerActive) {
-        updateTimeSpent();
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      if (timerActive) {
-        updateTimeSpent();
-      }
-    };
-  }, [timerActive, timeSpent, course?.subject]);
-
-  const updateTimeSpent = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token || !course?.subject) return;
-  
-      const timeField = getTimeField(course.subject);
-      if (!timeField) return;
-  
-      const updateData = {
-        [timeField]: timeSpent.toString()
-      };
-  
-      // Only include marks if quiz was submitted AND marks haven't been updated yet
-      if (quizSubmitted && !hasUpdatedMarks) {
-        updateData[getMarksField(course.subject)] = quizScore;
-        setHasUpdatedMarks(true); // Mark that we've updated the marks
-      }
-  
-      const response = await axios.put(
-        "https://edu-platform-ten.vercel.app/api/auth/updateProfile",
-        updateData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-  
-      console.log("Time update response:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Error updating time spent:", error);
-      throw error;
-    }
-  };
-
   // Handle course completion
   const handleComplete = () => {
     setIsCompleted(true);
+    alert("Course marked as completed!");
     navigate('/');
-  };
-
-  // Helper function to map subject to the corresponding time field
-  const getTimeField = (subject) => {
-    const subjectToFieldMap = {
-      "number sequence": "numberSequencesTime",
-      "perimeter": "perimeterTime",
-      "ratio": "ratioTime",
-      "fractions/decimals": "fractionsDecimalsTime",
-      "indices": "indicesTime",
-      "algebra": "algebraTime",
-      "angles": "anglesTime",
-      "volume and capacity": "volumeCapacityTime",
-      "area": "areaTime",
-      "probability": "probabilityTime",
-    };
-    return subjectToFieldMap[subject] || "";
   };
 
   // Handle quiz answer input change
@@ -157,41 +74,38 @@ const CourseDetailsPage = () => {
         return;
       }
 
-      // Validate quiz answers
+      // Check if correct answers are available
       if (!course.quizAnswers || course.quizQuestions.length !== course.quizAnswers.length) {
         alert("Quiz answers are not available. Please contact support.");
         return;
       }
 
-      // Calculate score
+      // Compare user answers with correct answers
       const results = userAnswers.map((answer, index) => 
         answer === course.quizAnswers[index].toLowerCase()
       );
       setCorrectAnswers(results);
+
+      // Calculate quiz score (5 points per correct answer)
       const score = results.reduce((acc, isCorrect) => acc + (isCorrect ? 20 : 0), 0);
       setQuizScore(score);
 
-      // Stop the timer
-      setTimerActive(false);
-
-      // Prepare update data
-      const updateData = {
-        [getMarksField(course.subject)]: score,
-        [getTimeField(course.subject)]: timeSpent.toString()
-      };
-
-      // Send update to backend
+      // Update user profile with quiz marks
       const updateResponse = await axios.put(
-        "https://edu-platform-ten.vercel.app/api/auth/updateProfile",
-        updateData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        "https://research-project-theta.vercel.app/api/auth/updateProfile",
+        {
+          [getMarksField(course.subject)]: score, // Update the corresponding marks field
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (updateResponse.data.message === "Profile updated successfully") {
         setQuizSubmitted(true);
-        alert(`Quiz submitted! Score: ${score} | Time: ${formatTime(timeSpent)}`);
+        alert(`Quiz submitted successfully! You scored ${score} points.`);
       } else {
-        alert("Failed to update quiz data.");
+        alert("Failed to update quiz marks.");
       }
     } catch (error) {
       console.error("Error submitting quiz:", error);
@@ -227,7 +141,7 @@ const CourseDetailsPage = () => {
 
       // Submit the review
       await axios.post(
-        `https://edu-platform-ten.vercel.app/api/reviews`,
+        `https://research-project-theta.vercel.app/api/reviews`,
         {
           courseId: id,
           rating,
@@ -256,22 +170,6 @@ const CourseDetailsPage = () => {
   return (
     <Box sx={{ padding: 4, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
       <Paper elevation={3} sx={{ padding: 3, marginBottom: 4, marginTop: 4, position: "relative" }}>
-      <Box sx={{ 
-    position: "absolute", 
-    top: -30, 
-    left: "50%", 
-    transform: "translateX(-50%)",
-    backgroundColor: '#f0f0f0',
-    padding: '4px 16px',
-    borderRadius: '4px',
-    boxShadow: 1,
-    zIndex: 1
-  }}>
-    <Typography variant="body1">
-      Time spent: {formatTime(timeSpent)}
-    </Typography>
-  </Box>
-        
         {/* Complete Button */}
         <Button
           variant="contained"
@@ -373,29 +271,15 @@ const CourseDetailsPage = () => {
               )}
             </Box>
           ))}
-          {!quizSubmitted ? (
-            <Button 
-              variant="contained" 
-              color="primary" 
-              onClick={handleQuizSubmit}
-            >
+          {!quizSubmitted && (
+            <Button variant="contained" color="primary" onClick={handleQuizSubmit}>
               Submit Quiz
             </Button>
-          ) : (
-            <>
-              <Typography variant="body1" sx={{ color: "green", marginTop: 2 }}>
-                Quiz submitted! Score: {quizScore} | Time: {formatTime(timeSpent)}
-              </Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleComplete}
-                sx={{ marginTop: 2 }}
-                startIcon={<CheckCircleIcon />}
-              >
-                Complete Course
-              </Button>
-            </>
+          )}
+          {quizSubmitted && (
+            <Typography variant="body1" sx={{ color: "green", marginTop: 2 }}>
+              Quiz submitted successfully! You scored {quizScore} points.
+            </Typography>
           )}
         </>
       )}
@@ -434,19 +318,6 @@ const CourseDetailsPage = () => {
       </Box>
     </Box>
   );
-};
-
-// Helper function to format seconds into HH:MM:SS
-const formatTime = (seconds) => {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  
-  return [
-    hrs.toString().padStart(2, '0'),
-    mins.toString().padStart(2, '0'),
-    secs.toString().padStart(2, '0')
-  ].join(':');
 };
 
 export default CourseDetailsPage;

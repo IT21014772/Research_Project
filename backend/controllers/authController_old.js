@@ -9,9 +9,7 @@ exports.registerUser = async (req, res) => {
 
     // Validate required fields
     if (!name || !email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Name, email, and password are required" });
+      return res.status(400).json({ message: "Name, email, and password are required" });
     }
 
     // Check if user already exists
@@ -70,6 +68,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+
 // Login User
 exports.loginUser = async (req, res) => {
   try {
@@ -78,17 +77,11 @@ exports.loginUser = async (req, res) => {
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-    res.json({
-      token,
-      user: { id: user._id, name: user.name, email: user.email },
-    });
+    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -123,58 +116,44 @@ exports.updateUserProfile = async (req, res) => {
       }
     });
 
-    // Update time fields independently
-    const timeFields = [
-      "numberSequencesTime",
-      "perimeterTime", 
-      "ratioTime",
-      "fractionsDecimalsTime",
-      "indicesTime",
-      "algebraTime",
-      "anglesTime",
-      "volumeCapacityTime",
-      "areaTime",
-      "probabilityTime"
-    ];
-
-    timeFields.forEach((field) => {
-      if (updateData[field] !== undefined) {
-        user[field] = updateData[field];
-      }
-    });
-
-    // Update marks and cognitive performance (existing code)
+    // Update marks and time(s) fields
     const marksFields = [
-      "numberSequences",
-      "perimeter", 
-      "ratio",
-      "fractionsDecimals",
-      "indices",
-      "algebra",
-      "angles",
-      "volumeCapacity",
-      "area",
-      "probability"
+      "numberSequencesMarks",
+      "perimeterMarks",
+      "ratioMarks",
+      "fractionsDecimalsMarks",
+      "indicesMarks",
+      "algebraMarks",
+      "anglesMarks",
+      "volumeCapacityMarks",
+      "areaMarks",
+      "probabilityMarks",
     ];
 
-    let marksUpdated = false;
-    
-    marksFields.forEach((topic) => {
-      const marksField = `${topic}Marks`;
-      
-      if (updateData[marksField] !== undefined) {
-        user[marksField].push(updateData[marksField]);
-        marksUpdated = true;
+    let marksUpdated = false; // Track if any marks are updated
+    marksFields.forEach((field) => {
+      if (updateData[field] !== undefined) {
+        // Append the new mark to the array
+        user[field].push(updateData[field]);
+
+        // Increment the corresponding time(s) field
+        const timeField = field.replace("Marks", "Time");
+        user[timeField] = (parseInt(user[timeField]) + 1).toString();
+
+        marksUpdated = true; // Marks have been updated
       }
     });
 
+    // Update cognitive performance if marks are updated
     if (marksUpdated) {
-      const sumOfLatestMarks = marksFields.reduce((sum, topic) => {
-        const marksArray = user[`${topic}Marks`];
+      // Calculate the sum of the latest marks
+      const sumOfLatestMarks = marksFields.reduce((sum, field) => {
+        const marksArray = user[field];
         const lastMark = marksArray.length > 0 ? marksArray[marksArray.length - 1] : 0;
         return sum + lastMark;
       }, 0);
 
+      // Determine cognitive performance based on the sum
       if (sumOfLatestMarks > 750) {
         user.cognitivePerformance = "Very High";
       } else if (sumOfLatestMarks >= 500 && sumOfLatestMarks <= 750) {
@@ -186,7 +165,9 @@ exports.updateUserProfile = async (req, res) => {
       }
     }
 
+    // Save the updated user
     await user.save();
+
     res.json({ message: "Profile updated successfully", user });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -199,8 +180,6 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find().select("-password"); // Exclude passwords
     res.status(200).json(users);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch users", error: error.message });
+    res.status(500).json({ message: "Failed to fetch users", error: error.message });
   }
 };
